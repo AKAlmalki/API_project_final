@@ -22,7 +22,7 @@ class QuestionView extends Component {
 
   getQuestions = () => {
     $.ajax({
-      url: `/questions?page=${this.state.page}`, //TODO: update request URL
+      url: `/questions?page=${this.state.page}`, //DONE: update request URL [done - paginate the questions]
       type: 'GET',
       success: (result) => {
         this.setState({
@@ -65,7 +65,7 @@ class QuestionView extends Component {
 
   getByCategory = (id) => {
     $.ajax({
-      url: `/categories/${id}/questions`, //TODO: update request URL
+      url: `/categories/${id}/questions`, //DONE: update request URL [done - get questions based on category]
       type: 'GET',
       success: (result) => {
         this.setState({
@@ -84,7 +84,7 @@ class QuestionView extends Component {
 
   submitSearch = (searchTerm) => {
     $.ajax({
-      url: `/questions`, //TODO: update request URL
+      url: `/questions`, //DONE: update request URL [done - search for an existing question]
       type: 'POST',
       dataType: 'json',
       contentType: 'application/json',
@@ -112,7 +112,7 @@ class QuestionView extends Component {
     if (action === 'DELETE') {
       if (window.confirm('are you sure you want to delete the question?')) {
         $.ajax({
-          url: `/questions/${id}`, //TODO: update request URL
+          url: `/questions/${id}`, //DONE: update request URL [done - delete an existing question]
           type: 'DELETE',
           success: (result) => {
             this.getQuestions();
