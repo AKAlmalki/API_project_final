@@ -7,8 +7,8 @@ from flaskr import create_app
 from models import setup_db, Question, Category
 
 DB_HOST = os.getenv('DB_HOST', '127.0.0.1:5432')
-DB_USER = os.getenv('DB_USER', 'student')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'student')
+DB_USER = os.getenv('DB_USER', 'postgres')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'abc')
 DB_NAME = os.getenv('DB_NAME', 'trivia_test')
 DB_PATH = 'postgresql+psycopg2://{}:{}@{}/{}'.format(
     DB_USER, DB_PASSWORD, DB_HOST, DB_NAME)
@@ -43,12 +43,17 @@ class TriviaTestCase(unittest.TestCase):
 
         self.play_quiz1 = {
             "previous_questions": [5, 9],
-            "quiz_category": {"type": "History", "id": "4"}
+            "quiz_category": {"type": "History", "id": 4}
         }
 
         self.play_quiz2 = {
             "previous_questions": [5, 9, 12, 23, 29],
-            "quiz_category": {"type": "History", "id": "4"}
+            "quiz_category": {"type": "History", "id": 4}
+        }
+
+        self.play_quiz3 = {
+            "previous_questions": [5, 9, 12, 23, 29],
+            "quiz_category": {"type": "click", "id": 0}
         }
 
         # binds the app to the current context
@@ -186,6 +191,18 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data["message"], "resource not found")
         self.assertFalse(data["success"])
 
+    def test_400_search_with_none_body(self):
+        res = self.client().post(
+            "/questions",
+            json=None
+        )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data["error"], 400)
+        self.assertEqual(data["message"], "bad request")
+        self.assertFalse(data["success"])
+
 # =============================================================================================
 # Quiz Section
 # =============================================================================================
@@ -195,8 +212,11 @@ class TriviaTestCase(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        # 5 because it will return a json response
-        # with 5 pairs in it (answer, question, category, difficulty, id)
+        """
+        5 because it will return a json response
+        with 5 pairs in it (answer, question, category,
+        difficulty, id)
+        """
         self.assertEqual(len(data["question"]), 5)
 
     # it should return None in data["question"]
@@ -206,6 +226,14 @@ class TriviaTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data["question"], None)
+
+    # it should return None in data["question"]
+    def test_play_quiz_with_all_categories(self):
+        res = self.client().post("/quizzes", json=self.play_quiz3)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(data["question"]), 5)
 
 # =============================================================================================
 

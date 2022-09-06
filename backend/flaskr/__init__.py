@@ -324,7 +324,7 @@ def create_app(test_config=None):
             'success': False,
             'message': "resource not found",
             'error': 404
-        })
+        }), 404
 
     @app.errorhandler(422)
     def unprocessable(error):
@@ -333,7 +333,7 @@ def create_app(test_config=None):
             'success': False,
             'message': "unprocessable",
             'error': 422,
-        })
+        }), 422
 
     @app.errorhandler(405)
     def method_not_allowed(error):
@@ -342,7 +342,7 @@ def create_app(test_config=None):
             'success': False,
             'message': "method not allowed",
             'error': 405,
-        })
+        }), 405
 
     @app.errorhandler(400)
     def bad_request(error):
@@ -351,7 +351,7 @@ def create_app(test_config=None):
             'success': False,
             'message': "bad request",
             'error': 400,
-        })
+        }), 400
 
     @app.errorhandler(500)
     def internal_server_error(error):
@@ -360,6 +360,6 @@ def create_app(test_config=None):
             'success': False,
             'message': "internal server error",
             'error': 500,
-        })
+        }), 500
 
     return app
