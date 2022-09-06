@@ -167,8 +167,10 @@ def create_app(test_config=None):
         new_answer = body.get('answer', None)
         new_category = body.get('category', None)
         new_difficulty = body.get('difficulty', None)
-        # this will activie the search feature
-        # if it's found in the request body
+        """
+        this will activie the search feature
+        if it's found in the request body
+        """
         searchTerm = body.get('searchTerm', None)
 
         if searchTerm:
@@ -222,17 +224,19 @@ def create_app(test_config=None):
     # ==========================================================================
     @app.route('/categories/<int:id>/questions')
     def get_questions_by_category_id2(id):
-
-        # get all questions with category ID equal to 'id'
-        # from the parameters of the func.
+        """
+        get all questions with category ID equal to 'id'
+        from the parameters of the func.
+        """
         selection = Question.query.filter(
             Question.category == id).order_by(Question.id).all()
 
         # paginate the questions in groups of 10
         current_questions = paginate_questions(request, selection)
-
-        # get the category object with an ID equal to 'id
-        # from the parameters of the func.
+        """
+        get the category object with an ID equal to 'id
+        from the parameters of the func.
+        """
         current_category = Category.query.filter(
             Category.id == id).one_or_none()
 
@@ -272,17 +276,21 @@ def create_app(test_config=None):
 
         # in case of All category
         if quiz_category['id'] == 0:
-            # get all the questions which are not from
-            # the previous questions from all categories.
+            """
+            get all the questions which are not from
+            the previous questions from all categories.
+            """
             questions_by_category = Question.query.order_by(
                 Question.id).filter(
                     Question.id.notin_(previous_questions)).all()
 
         # in case of specific category
         else:
-            # get all the questions order by ID that have
-            # the category 'new_category' from above AND
-            # their ID is not from the previous questions.
+            """
+            get all the questions order by ID that have
+            the category 'new_category' from above AND
+            their ID is not from the previous questions.
+            """
             questions_by_category = Question.query.order_by(
                 Question.id).filter(
                     Question.category == quiz_category['id'],
